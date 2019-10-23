@@ -18,9 +18,20 @@ const App = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(posts.length / postsPerPage);
 
   //change page
   const paginate = (pageNumber)=> setCurrentPage(pageNumber);
+  const next = () => {
+    if(currentPage < totalPages){
+      setCurrentPage(currentPage + 1)
+    }
+  };
+  const prev = ()=> {
+    if(currentPage >= 2){
+      setCurrentPage(currentPage - 1)
+    }
+  };
 
   const fetchPosts = async()=>{
     setLoading(true);
@@ -33,7 +44,15 @@ const App = () => {
   return (
     <React.Fragment>
       <Posts loading={loading} posts={currentPosts} />
-      <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate} />
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={posts.length}
+        paginate={paginate}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        next = {next}
+        prev = {prev}
+       />
     </React.Fragment>
   );
 }

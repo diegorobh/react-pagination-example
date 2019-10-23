@@ -1,43 +1,31 @@
 import React from "react";
 import MobileStepper from '@material-ui/core/MobileStepper';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import Button from '@material-ui/core/Button';
 
-const Pagination = ( { postsPerPage, totalPosts, paginate } ) => {
-  const pageNumbers = [];
-
-  for(let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++){
-    pageNumbers.push(i)
-  }
-
-  /*<MobileStepper
-          steps={maxSteps}
-          position="static"
-          variant="text"
-          activeStep={activeStep}
-          nextButton={
-            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-              Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-              Back
-            </Button>
-          }
-        />*/
-
+const Pagination = ( { postsPerPage, totalPosts, paginate, next, prev, currentPage, totalPages } ) => {
+  
   return(
     <nav>
-      <ul>
-        {pageNumbers.map(number => (
-          <li key={number}>
-            <a href="!#" onClick={()=>paginate(number)}>
-              {number}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <MobileStepper
+            steps={totalPages}
+            position="static"
+            variant="text"
+            activeStep={ currentPage - 1 }
+            nextButton={
+              <Button size="small" onClick={()=>{next(totalPages)}} >
+                Next
+                <KeyboardArrowRight />
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={()=>{prev()}} >
+                <KeyboardArrowLeft />
+                Back
+              </Button>
+            }
+          />
     </nav>
   )
 }
