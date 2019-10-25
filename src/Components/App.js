@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Posts from "./Posts";
 import Pagination from "./Pagination";
 import axios from "axios";
@@ -9,10 +9,19 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
+  const [containerListHeight, setContainerListHeight] = useState(400);
+  const containerList = useRef(null)
 
   useEffect(()=>{
-    fetchPosts()
-  },[]);
+    getContainerSize()
+    console.log(posts)
+    if(posts.length == 0){
+      fetchPosts()
+    }
+  },[containerListHeight]);
+
+  //height of cells
+  const heightOfListElement = 34
 
   //get current posts
   const indexOfLastPost = currentPage * postsPerPage;
@@ -41,9 +50,21 @@ const App = () => {
     setLoading(false);
   }
 
+  const getPostsPerPage = ()=> {
+    setContainerListHeight(containerList.current.offsetHeight);
+    console.log(containerListHeight);
+    let postsPerPage = Math.floor(containerListHeight / heightOfListElement);
+    setPostsPerPage(postsPerPage);
+    console.log(postsPerPage);
+  }
+
+  const getContainerSize = ()=>{
+    containerList.current != null ? getPostsPerPage() : console.log("loading div")
+  }
+
   return (
-    <React.Fragment>
-      <Posts loading={loading} posts={currentPosts} />
+    <div className="full_height_container" ref={containerList}>
+      <Posts loading={loading} posts={currentPosts} containerHeight={containerListHeight} />
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={posts.length}
@@ -53,7 +74,7 @@ const App = () => {
         next = {next}
         prev = {prev}
        />
-    </React.Fragment>
+    </div>
   );
 }
 
